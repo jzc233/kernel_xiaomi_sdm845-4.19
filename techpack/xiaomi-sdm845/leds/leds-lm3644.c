@@ -1045,7 +1045,7 @@ static int lm3644_probe(struct i2c_client *client,
 	i2c_set_clientdata(client, chip);
 
 	INIT_WORK(&chip->ir_stop_work, lm3644_ir_stop_work);
-	time_rsetup(&chip->ir_stop_timer, lm3644_ir_stop_timer,
+	timer_setup(&chip->ir_stop_timer, lm3644_ir_stop_timer,
 		(unsigned long)chip);
 
 	err = lm3644_chip_init(chip);
@@ -1187,7 +1187,7 @@ static int lm3644_remove(struct i2c_client *client)
 	if (chip->chr_dev)
 		class_destroy(chip->chr_class);
 
-	cancel_work(&chip->ir_stop_work);
+	cancel_work_sync(&chip->ir_stop_work);
 	del_timer(&chip->ir_stop_timer);
 	led_classdev_unregister(&chip->cdev_torch);
 	led_classdev_unregister(&chip->cdev_ir);

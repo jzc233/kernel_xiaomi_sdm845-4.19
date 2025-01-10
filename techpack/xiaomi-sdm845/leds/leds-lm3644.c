@@ -20,7 +20,7 @@
 #include <linux/gpio.h>
 #include <linux/of_gpio.h>
 #include <linux/timer.h>
-#include <linux/qpnp/pwm.h>
+#include <linux/pwm.h>
 #include <linux/cdev.h>
 #include <asm/uaccess.h>
 #include <linux/poll.h>

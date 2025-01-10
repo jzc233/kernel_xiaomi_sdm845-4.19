@@ -15,18 +15,7 @@
 &firmware {
 	android {
 		/delete-node/ vbmeta;
-	};
-};
-
-&reserved_memory {
-	ramoops: ramoops@b0000000 {
-		compatible = "ramoops";
-		reg = <0 0xb0000000 0 0x00400000>;
-		record-size = <0x40000>; /*256x1024*/
-		console-size = <0x40000>;
-		ftrace-size = <0x40000>;
-		pmsg-size = <0x200000>;
-		ecc-size = <0x0>;
+		/delete-node/ fstab;
 	};
 };
 
@@ -88,10 +77,6 @@
 };
 
 &soc {
-	restart@10ac000 {
-		qcom,force-warm-reboot;
-	};
-	
 	qcom,msm-imem@146bf000 {
 		dload_type@18 {
 			compatible = "qcom,msm-imem-dload-type";
@@ -184,12 +169,14 @@
 	/delete-property/ qcom,usbc-analog-en2-gpio;
 };
 
+/*
 &wcd934x_cdc {
 	qcom,cdc-micbias1-mv = <2700>;
 	qcom,cdc-micbias2-mv = <1800>;
 	qcom,cdc-micbias3-mv = <2700>;
 	qcom,cdc-micbias4-mv = <2700>;
 };
+*/
 /* sdm845-audio-overlay.dtsi */
 
 /* sdm845-670-usb-common.dtsi */

@@ -1045,8 +1045,7 @@ static int lm3644_probe(struct i2c_client *client,
 	i2c_set_clientdata(client, chip);
 
 	INIT_WORK(&chip->ir_stop_work, lm3644_ir_stop_work);
-	timer_setup(&chip->ir_stop_timer, lm3644_ir_stop_timer,
-		(unsigned long)chip);
+	timer_setup(&chip->ir_stop_timer, lm3644_ir_stop_timer, 0);
 
 	err = lm3644_chip_init(chip);
 	if (err < 0)

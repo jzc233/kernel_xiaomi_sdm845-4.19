@@ -211,7 +211,7 @@ static int lm3644_control(struct lm3644_chip_data *chip,
 			dev_dbg(chip->dev, "Simulative PWM disabled\n");
 		}
 
-		cancel_work(&chip->ir_stop_work);
+		cancel_work_sync(&chip->ir_stop_work);
 		del_timer(&chip->ir_stop_timer);
 	}
 
@@ -1045,7 +1045,7 @@ static int lm3644_probe(struct i2c_client *client,
 	i2c_set_clientdata(client, chip);
 
 	INIT_WORK(&chip->ir_stop_work, lm3644_ir_stop_work);
-	setup_timer(&chip->ir_stop_timer, lm3644_ir_stop_timer,
+	time_rsetup(&chip->ir_stop_timer, lm3644_ir_stop_timer,
 		(unsigned long)chip);
 
 	err = lm3644_chip_init(chip);

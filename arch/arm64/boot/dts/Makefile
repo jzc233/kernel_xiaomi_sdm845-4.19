@@ -34,7 +34,7 @@ subdir-y += zte
 
 else
     ifeq ($(CONFIG_ARCH_SDM845),y)
-        subdir-y += qcom-legacy
+        subdir-y += qcom
     else
         subdir-y += vendor
     endif

@@ -5406,6 +5406,7 @@ static int dsi_display_bind(struct device *dev,
 		goto error_ctrl_deinit;
 	}
 
+	DSI_INFO("[%s] Initializing panel driver with panel %pK\n", display->name, display->panel);
 	rc = dsi_panel_drv_init(display->panel, &display->host);
 	if (rc) {
 		if (rc != -EPROBE_DEFER)
@@ -5415,6 +5416,7 @@ static int dsi_display_bind(struct device *dev,
 	}
 
 	DSI_INFO("Successfully bind display panel '%s'\n", display->name);
+	DSI_INFO("Assigned drm_dev %pK to display %pK\n", drm, display);
 	display->drm_dev = drm;
 
 	display_for_each_ctrl(i, display) {
@@ -5423,6 +5425,7 @@ static int dsi_display_bind(struct device *dev,
 		if (!display_ctrl->phy || !display_ctrl->ctrl)
 			continue;
 
+		DSI_INFO("Assigning drm_dev to ctrl[%d] %pK\n", i, display_ctrl);
 		display_ctrl->ctrl->drm_dev = drm;
 
 		rc = dsi_phy_set_clk_freq(display_ctrl->phy,

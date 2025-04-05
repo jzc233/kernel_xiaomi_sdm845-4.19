@@ -1254,20 +1254,22 @@ static void _dsi_display_setup_misr(struct dsi_display *display)
 int dsi_display_set_power(struct drm_connector *connector,
 		int power_mode, void *disp)
 {
+	struct drm_device *dev = NULL;
 	struct drm_notify_data g_notify_data;
 	struct dsi_display *display = disp;
-	struct drm_device *dev = NULL;
-	if (!dev) {
-    DSI_ERR("Invalid DRM device\n");
-    return -EINVAL;
-    }
 	int rc = 0;
 
 	if (!display || !display->panel) {
 		DSI_ERR("invalid display/panel\n");
 		return -EINVAL;
 	}
-
+	
+	dev = display->drm_dev;
+	if (!dev) {
+    DSI_ERR("Invalid DRM device\n");
+    return -EINVAL;
+    }
+    
 	g_notify_data.data = &power_mode;
 	switch (power_mode) {
 	case SDE_MODE_DPMS_LP1:
@@ -5404,7 +5406,8 @@ static int dsi_display_bind(struct device *dev,
 		       display->name, rc);
 		goto error_ctrl_deinit;
 	}
-
+	
+	DSI_INFO("[%s] Initializing panel driver with panel %pK\n", display->name, display->panel);
 	rc = dsi_panel_drv_init(display->panel, &display->host);
 	if (rc) {
 		if (rc != -EPROBE_DEFER)
@@ -5414,6 +5417,7 @@ static int dsi_display_bind(struct device *dev,
 	}
 
 	DSI_INFO("Successfully bind display panel '%s'\n", display->name);
+	DSI_INFO("Assigned drm_dev %pK to display %pK\n", drm, display);
 	display->drm_dev = drm;
 
 	display_for_each_ctrl(i, display) {
@@ -5421,7 +5425,8 @@ static int dsi_display_bind(struct device *dev,
 
 		if (!display_ctrl->phy || !display_ctrl->ctrl)
 			continue;
-
+			
+		DSI_INFO("Assigning drm_dev to ctrl[%d] %pK\n", i, display_ctrl);
 		display_ctrl->ctrl->drm_dev = drm;
 
 		rc = dsi_phy_set_clk_freq(display_ctrl->phy,
@@ -5435,8 +5440,9 @@ static int dsi_display_bind(struct device *dev,
 
 	/* register te irq handler */
 	dsi_display_register_te_irq(display);
-
-	goto error;
+	mutex_unlock(&display->display_lock);
+	
+	return 0;
 
 error_host_deinit:
 	(void)dsi_display_mipi_host_deinit(display);

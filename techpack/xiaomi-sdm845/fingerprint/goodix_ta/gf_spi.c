@@ -746,6 +746,8 @@ static int gf_probe(struct platform_device *pdev)
 	int status = -EINVAL;
 	unsigned long minor;
 	int i;
+	
+    printk(KERN_DEBUG "gf_probe: Starting probe for device\n");
 
 	/* Initialize the driver data */
 	INIT_LIST_HEAD(&gf_dev->device_entry);
@@ -762,23 +764,29 @@ static int gf_probe(struct platform_device *pdev)
 	gf_dev->wait_finger_down = false;
 	INIT_WORK(&gf_dev->work, notification_work);
 
-	if (gf_parse_dts(gf_dev))
+    printk(KERN_DEBUG "gf_probe: Parsing device tree\n");
+
+	if (gf_parse_dts(gf_dev)) {
+        printk(KERN_ERR "gf_probe: Failed to parse device tree\n");
+	}
 		goto error_hw;
 
 	/* If we can allocate a minor number, hook up this device.
 	 * Reusing minors is fine so long as udev or mdev is working.
 	 */
+    printk(KERN_DEBUG "gf_probe: Trying to allocate minor number\n");
 	mutex_lock(&device_list_lock);
 	minor = find_first_zero_bit(minors, N_SPI_MINORS);
 	if (minor < N_SPI_MINORS) {
 		struct device *dev;
 
 		gf_dev->devt = MKDEV(SPIDEV_MAJOR, minor);
+        printk(KERN_DEBUG "gf_probe: Allocated minor number %lu\n", minor);
 		dev = device_create(gf_class, &gf_dev->spi->dev, gf_dev->devt,
 				gf_dev, GF_DEV_NAME);
 		status = IS_ERR(dev) ? PTR_ERR(dev) : 0;
 	} else {
-		dev_dbg(&gf_dev->spi->dev, "no minor number available!\n");
+        printk(KERN_ERR "gf_probe: No minor number available!\n");
 		status = -ENODEV;
 		mutex_unlock(&device_list_lock);
 		goto error_hw;
@@ -787,6 +795,7 @@ static int gf_probe(struct platform_device *pdev)
 	if (status == 0) {
 		set_bit(minor, minors);
 		list_add(&gf_dev->device_entry, &device_list);
+        printk(KERN_DEBUG "gf_probe: Device successfully registered\n");
 	} else {
 		gf_dev->devt = 0;
 	}
@@ -794,6 +803,7 @@ static int gf_probe(struct platform_device *pdev)
 
 	if (status == 0) {
 		/*input device subsystem */
+        printk(KERN_DEBUG "gf_probe: Allocating input device\n");
 		gf_dev->input = input_allocate_device();
 		if (gf_dev->input == NULL) {
 			pr_err("%s, failed to allocate input device\n", __func__);
@@ -809,26 +819,35 @@ static int gf_probe(struct platform_device *pdev)
 			pr_err("failed to register input device\n");
 			goto error_input;
 		}
+        printk(KERN_DEBUG "gf_probe: Input device registered\n");
 	}
 #ifdef AP_CONTROL_CLK
+    printk(KERN_DEBUG "gf_probe: Enabling SPI clock\n");
 	pr_debug("Get the clk resource.\n");
 	/* Enable spi clock */
-	if (gfspi_ioctl_clk_init(gf_dev))
+	if (gfspi_ioctl_clk_init(gf_dev)) {
+        printk(KERN_ERR "gf_probe: Failed to initialize SPI clock\n");
+	}
 		goto gfspi_probe_clk_init_failed;
 
-	if (gfspi_ioctl_clk_enable(gf_dev))
+	if (gfspi_ioctl_clk_enable(gf_dev)) {
+        printk(KERN_ERR "gf_probe: Failed to enable SPI clock\n");
+	}
 		goto gfspi_probe_clk_enable_failed;
 
 	spi_clock_set(gf_dev, 1000000);
+    printk(KERN_DEBUG "gf_probe: SPI clock set to 1MHz\n");
 #endif
 
 	gf_dev->notifier = goodix_noti_block;
 	drm_register_client(&gf_dev->notifier);
 
 	gf_dev->irq = gf_irq_num(gf_dev);
+    printk(KERN_DEBUG "gf_probe: IRQ number is %d\n", gf_dev->irq);
 
 	fp_wakelock = wakeup_source_register(NULL, "fp_wakelock");
-	pr_debug("version V%d.%d.%02d\n", VER_MAJOR, VER_MINOR, PATCH_LEVEL);
+    printk(KERN_DEBUG "gf_probe: Fingerprint wake lock registered\n");
+    printk(KERN_DEBUG "gf_probe: Version V%d.%d.%02d\n", VER_MAJOR, VER_MINOR, PATCH_LEVEL);
 
 	return status;
 
@@ -843,7 +862,7 @@ error_input:
 		input_free_device(gf_dev->input);
 error_dev:
 	if (gf_dev->devt != 0) {
-		pr_debug("Err: status = %d\n", status);
+        printk(KERN_ERR "gf_probe: Error occurred, cleaning up\n");
 		mutex_lock(&device_list_lock);
 		list_del(&gf_dev->device_entry);
 		device_destroy(gf_class, gf_dev->devt);

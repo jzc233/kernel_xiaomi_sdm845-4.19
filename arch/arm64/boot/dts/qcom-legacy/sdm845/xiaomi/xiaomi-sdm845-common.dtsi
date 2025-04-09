@@ -236,6 +236,16 @@
 	qcom,slope-limit-coeffs = <10 11 12 13>;
 };
 
+#ifdef CONFIG_BACKLIGHT_QCOM_WLED_MAINLINE
+&pmi8998_wled {
+	qcom,auto-calibration;
+};
+#else
+&pmi8998_wled {
+	/delete-property/ qcom,auto-calibration;
+};
+#endif
+
 &smb1355_charger_0 {
 	status = "ok";
 	qcom,enable-ctm;

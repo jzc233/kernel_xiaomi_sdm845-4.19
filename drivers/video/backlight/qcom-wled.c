@@ -12,6 +12,7 @@
 #include <linux/of_address.h>
 #include <linux/platform_device.h>
 #include <linux/regmap.h>
+#include "../../leds/leds.h"
 
 /* From DT binding */
 #define WLED_MAX_STRINGS				4
@@ -104,6 +105,7 @@
 
 #define WLED4_SINK_REG_STR_CABC(n)			(0x56 + (n * 0x10))
 #define  WLED4_SINK_REG_STR_CABC_MASK			BIT(7)
+#define  WLED4_SINK_REG_STR_CABC_EN			BIT(7)
 
 #define WLED4_SINK_REG_BRIGHT(n)			(0x57 + (n * 0x10))
 
@@ -183,6 +185,7 @@ struct wled {
 	struct device *dev;
 	struct regmap *regmap;
 	struct mutex lock;	/* Lock to avoid race from thread irq handler */
+	struct led_classdev cdev;
 	ktime_t last_short_event;
 	ktime_t start_ovp_fault_time;
 	u16 ctrl_addr;
@@ -200,6 +203,7 @@ struct wled {
 	bool ovp_irq_disabled;
 	int short_irq;
 	int ovp_irq;
+	int num_strings;
 
 	struct wled_config cfg;
 	struct delayed_work ovp_work;
@@ -1313,6 +1317,38 @@ static u32 wled_values(const struct wled_var_cfg *cfg, u32 idx)
 		return cfg->values[idx];
 	return idx;
 }
+
+int qpnp_wled_cabc(struct led_classdev *led_cdev, bool enable)
+{
+	struct wled *wled;
+	int rc = 0, i;
+	u8 reg = 0;
+
+	wled = container_of(led_cdev, struct wled, cdev);
+	if (wled == NULL) {
+		pr_err("wled is null\n");
+		return -EPERM;
+	}
+
+	mutex_lock(&wled->lock);
+	wled->cfg.cabc = enable;
+	for (i = 0; i < wled->num_strings; i++) {
+		/* CABC */
+		reg = enable ? WLED4_SINK_REG_STR_CABC_EN : 0;
+		rc = regmap_update_bits(wled->regmap, wled->sink_addr +
+				WLED4_SINK_REG_STR_CABC(i),
+				WLED4_SINK_REG_STR_CABC_MASK, reg);
+		if (rc < 0)
+			goto fail_cabc;
+
+		pr_debug("%d cabc %d\n", i, wled->cfg.cabc);
+	}
+
+fail_cabc:
+	mutex_unlock(&wled->lock);
+	return rc;
+}
+EXPORT_SYMBOL_GPL(qpnp_wled_cabc);
 
 static int wled_configure(struct wled *wled)
 {

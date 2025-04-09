@@ -566,8 +566,8 @@
 			qcom,string-cfg = <15>;
 			qcom,pmic-revid = <&pmi8998_revid>;
 			status = "disabled";
-		};
 #endif
+		};
 
 		flash_led: qcom,leds@d300 {
 			compatible = "qcom,qpnp-flash-led-v2";

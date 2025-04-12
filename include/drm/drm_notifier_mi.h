@@ -53,19 +53,6 @@ struct mi_drm_notify_data {
 	void *data;
 };
 
-void set_skip_panel_dead(bool on)
-{
-	struct sde_connector *c_conn = primary_c_conn;
-	if (!c_conn) {
-		pr_err("%s: not able to get connector object\n", __func__);
-		return;
-	}
-
-	c_conn->panel_dead_skip = !!on;
-
-	return;
-}
-
 int mi_drm_register_client(struct notifier_block *nb);
 int mi_drm_unregister_client(struct notifier_block *nb);
 int mi_drm_notifier_call_chain(unsigned long val, void *v);

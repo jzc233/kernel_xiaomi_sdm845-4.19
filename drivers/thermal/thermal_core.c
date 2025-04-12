@@ -1819,7 +1819,7 @@ static void destroy_thermal_message_node(void) {
 #ifdef CONFIG_DRM
 static int screen_state_for_thermal_callback(struct notifier_block *nb, unsigned long val, void *data)
 {
-	struct drm_notify_data *evdata = data;
+	struct mi_drm_notify_data *evdata = data;
 	unsigned int blank;
 
 	if (val != MI_DRM_EVENT_BLANK || !tm || !evdata || !evdata->data)

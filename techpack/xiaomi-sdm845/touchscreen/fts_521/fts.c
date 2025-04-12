@@ -58,7 +58,7 @@
 
 #include <linux/notifier.h>
 #ifdef CONFIG_DRM
-#include <drm/drm_notifier.h>
+#include <drm/drm_notifier_mi.h>
 #include <drm/drm_panel.h>
 #endif
 #include <linux/backlight.h>

@@ -498,7 +498,7 @@ static void dsi_bridge_post_disable(struct drm_bridge *bridge)
 {
 	int rc = 0;
 	struct dsi_bridge *c_bridge = to_dsi_bridge(bridge);
-	struct drm_notify_data g_notify_data;
+	struct mi_drm_notify_data g_notify_data;
 	struct drm_device *dev = bridge->dev;
 	int event = 0;
 
@@ -551,7 +551,7 @@ static void dsi_bridge_post_disable(struct drm_bridge *bridge)
 	}
 	SDE_ATRACE_END("dsi_bridge_post_disable");
 
-	drm_notifier_call_chain(DRM_EVENT_BLANK, &g_notify_data);
+	drm_notifier_call_chain(MI_DRM_EVENT_BLANK, &g_notify_data);
 
 	if (gbridge)
 		gbridge->base.dev->fp_quickon = false;

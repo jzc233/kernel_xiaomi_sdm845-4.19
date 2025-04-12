@@ -48,6 +48,11 @@ struct mi_drm_notifier {
 	void *data;
 };
 
+struct mi_drm_notify_data {
+	bool is_primary;
+	void *data;
+};
+
 int mi_drm_register_client(struct notifier_block *nb);
 int mi_drm_unregister_client(struct notifier_block *nb);
 int mi_drm_notifier_call_chain(unsigned long val, void *v);

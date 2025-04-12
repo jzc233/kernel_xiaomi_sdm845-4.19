@@ -74,7 +74,7 @@ static struct delayed_work prim_panel_work;
 static atomic_t prim_panel_is_on;
 static struct wakeup_source *prim_panel_wakelock;
 
-struct drm_notify_data g_notify_data;
+struct mi_drm_notify_data g_notify_data;
 
 int panel_disp_param_send(struct dsi_display *display, int cmd);
 
@@ -215,7 +215,7 @@ static void dsi_bridge_pre_enable(struct drm_bridge *bridge)
 {
 	int rc = 0;
 	struct dsi_bridge *c_bridge = to_dsi_bridge(bridge);
-	struct drm_notify_data g_notify_data;
+	struct mi_drm_notify_data g_notify_data;
 	struct drm_device *dev = bridge->dev;
 	struct sde_connector *c_conn = to_sde_connector(c_bridge->display->drm_conn);
 	int event = 0;

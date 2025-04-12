@@ -62,6 +62,7 @@ beryllium-p0-v2-overlay.dtbo-base := sdm845-v2.dtb
 beryllium-p0-v2.1-overlay.dtbo-base := sdm845-v2.1.dtb
 
 endif
+endif
 
 always		:= $(dtb-y)
 subdir-y	:= $(dts-dirs)

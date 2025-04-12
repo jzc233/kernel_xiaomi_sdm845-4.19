@@ -7,7 +7,7 @@
 
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_atomic.h>
-#include <drm/drm_notifier.h>
+#include <drm/drm_notifier_mi.h>
 #include <linux/notifier.h>
 #include <drm/drm_bridge.h>
 #include <linux/pm_wakeup.h>

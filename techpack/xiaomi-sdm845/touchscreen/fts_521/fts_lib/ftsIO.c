@@ -739,9 +739,14 @@ int fts_writeU8UXthenWriteU8UX(u8 cmd1, AddrSize addrSize1, u8 cmd2,
 			       AddrSize addrSize2, u64 address, u8 *data,
 			       int dataSize)
 {
-	u8 *finalCmd1 = kmalloc(1 + addrSize1, GFP_KERNEL);
-	u8 *finalCmd2 = kmalloc(1 + addrSize2 + WRITE_CHUNK, GFP_KERNEL);
+	u8 *finalCmd1 = NULL;
+	u8 *finalCmd2 = NULL;
+	int remaining = 0;
+	int toWrite = 0, i = 0;
 
+	finalCmd1 = kmalloc(1 + addrSize1, GFP_KERNEL);
+	finalCmd2 = kmalloc(1 + addrSize2 + WRITE_CHUNK, GFP_KERNEL);
+	
         if (!finalCmd1 || !finalCmd2) {
         pr_err("%s: Memory allocation failed\n", __func__);
         kfree(finalCmd1);
@@ -749,8 +754,7 @@ int fts_writeU8UXthenWriteU8UX(u8 cmd1, AddrSize addrSize1, u8 cmd2,
         return -ENOMEM;
     }
 
-        int remaining = dataSize;
-        int toWrite = 0, i = 0;
+        remaining = dataSize;
 
 	while (remaining > 0) {
 		if (remaining >= WRITE_CHUNK) {
@@ -821,9 +825,16 @@ int fts_writeU8UXthenWriteReadU8UX(u8 cmd1, AddrSize addrSize1, u8 cmd2,
 				   AddrSize addrSize2, u64 address, u8 *outBuf,
 				   int byteToRead, int hasDummyByte)
 {
-	u8 *finalCmd1 = kmalloc(1 + addrSize1, GFP_KERNEL);
-	u8 *finalCmd2 = kmalloc(1 + addrSize2, GFP_KERNEL);
-	u8 *buff = kmalloc(READ_CHUNK + 1, GFP_KERNEL);
+	u8 *finalCmd1 = NULL;
+	u8 *finalCmd2 = NULL;
+	u8 *buff = NULL;
+	int remaining = 0;
+	int toRead = 0;
+	int i = 0;
+
+	finalCmd1 = kmalloc(1 + addrSize1, GFP_KERNEL);
+	finalCmd2 = kmalloc(1 + addrSize2, GFP_KERNEL);
+	buff = kmalloc(READ_CHUNK + 1, GFP_KERNEL);
 
         if (!finalCmd1 || !finalCmd2 || !buff) {
         pr_err("%s: Memory allocation failed\n", __func__);
@@ -833,8 +844,7 @@ int fts_writeU8UXthenWriteReadU8UX(u8 cmd1, AddrSize addrSize1, u8 cmd2,
         return -ENOMEM;
     }
 
-    int remaining = byteToRead;
-    int toRead = 0, i = 0;
+    remaining = byteToRead;
 
 
 	while (remaining > 0) {

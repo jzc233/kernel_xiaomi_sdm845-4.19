@@ -25,7 +25,6 @@
 #include <asm/uaccess.h>
 #include <asm/fcntl.h>
 
-#include "../../../../techpack/display/msm/sde/sde_connector.h"
 #include <drm/drm_notifier_mi.h>
 #include <soc/qcom/socinfo.h>
 

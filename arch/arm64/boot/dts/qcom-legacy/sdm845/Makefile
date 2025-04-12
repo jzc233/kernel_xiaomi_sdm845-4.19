@@ -37,6 +37,28 @@ dtb-$(CONFIG_MACH_XIAOMI_E1N) += xiaomi/dipper/dipper-p0-v2.dtb \
                         xiaomi/dipper/dipper-mp-v2.dtb \
                         xiaomi/dipper/dipper-mp-v2.1.dtb
 
+polaris-p0-overlay.dtbo-base := sdm845.dtb
+polaris-p0-v2-overlay.dtbo-base := sdm845-v2.dtb
+polaris-p1-overlay.dtbo-base := sdm845.dtb
+polaris-p1-v2-overlay.dtbo-base := sdm845-v2.dtb
+polaris-p1-v2.1-overlay.dtbo-base := sdm845-v2.1.dtb
+polaris-p2-overlay.dtbo-base := sdm845.dtb
+polaris-p2-v2-overlay.dtbo-base := sdm845-v2.dtb
+polaris-p2-v2.1-overlay.dtbo-base := sdm845-v2.1.dtb
+polaris-p3-overlay.dtbo-base := sdm845.dtb
+polaris-p3-v2-overlay.dtbo-base := sdm845-v2.dtb
+polaris-p3-v2.1-overlay.dtbo-base := sdm845-v2.1.dtb
+
+dipper-p0-v2-overlay.dtbo-base := sdm845-v2.dtb
+dipper-p0-v2.1-overlay.dtbo-base := sdm845-v2.1.dtb
+dipper-p1-v2-overlay.dtbo-base := sdm845-v2.dtb
+dipper-p1-v2.1-overlay.dtbo-base := sdm845-v2.1.dtb
+dipper-p2-v2-overlay.dtbo-base := sdm845-v2.dtb
+dipper-p2-v2.1-overlay.dtbo-base := sdm845-v2.1.dtb
+
+beryllium-p0-v2-overlay.dtbo-base := sdm845-v2.dtb
+beryllium-p0-v2.1-overlay.dtbo-base := sdm845-v2.1.dtb
+
 dtb-$(CONFIG_ARCH_SDM845) += sdm845-mtp.dtb \
 	                     sdm845-v2-mtp.dtb \
 	                     sdm845-v2.1-mtp.dtb

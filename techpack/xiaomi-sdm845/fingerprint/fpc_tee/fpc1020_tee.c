@@ -39,7 +39,7 @@
 #include <linux/pm_wakeup.h>
 #include <linux/fb.h>
 #include <drm/drm_bridge.h>
-#include <drm/drm_notifier.h>
+#include <drm/drm_notifier_mi.h>
 
 #define FPC_SCREEN_HOLD_TIME 2000
 #define FPC_TTW_HOLD_TIME 2000

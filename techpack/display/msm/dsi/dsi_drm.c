@@ -220,8 +220,8 @@ static void dsi_bridge_pre_enable(struct drm_bridge *bridge)
 	struct sde_connector *c_conn = to_sde_connector(c_bridge->display->drm_conn);
 	int event = 0;
 
-	if (dev->doze_state == DRM_BLANK_POWERDOWN) {
-		dev->doze_state = DRM_BLANK_UNBLANK;
+	if (dev->doze_state == MI_DRM_BLANK_POWERDOWN) {
+		dev->doze_state = MI_DRM_BLANK_UNBLANK;
 		pr_info("%s power on from power off\n", __func__);
 	}
 
@@ -247,17 +247,17 @@ static void dsi_bridge_pre_enable(struct drm_bridge *bridge)
 		cancel_delayed_work_sync(&prim_panel_work);
 		__pm_relax(prim_panel_wakelock);
 		if (dev->fp_quickon &&
-			(dev->doze_state == DRM_BLANK_LP1 || dev->doze_state == DRM_BLANK_LP2)) {
-			event = DRM_BLANK_POWERDOWN;
-			drm_notifier_call_chain(DRM_EARLY_EVENT_BLANK, &g_notify_data);
-			drm_notifier_call_chain(DRM_EVENT_BLANK, &g_notify_data);
+			(dev->doze_state == MI_DRM_BLANK_LP1 || dev->doze_state == MI_DRM_BLANK_LP2)) {
+			event = MI_DRM_BLANK_POWERDOWN;
+			drm_notifier_call_chain(MI_DRM_EARLY_EVENT_BLANK, &g_notify_data);
+			drm_notifier_call_chain(MI_DRM_EVENT_BLANK, &g_notify_data);
 			dev->fp_quickon = false;
 		}
 		pr_info("%s panel already on\n", __func__);
 		return;
 	}
 
-	drm_notifier_call_chain(DRM_EARLY_EVENT_BLANK, &g_notify_data);
+	drm_notifier_call_chain(MI_DRM_EARLY_EVENT_BLANK, &g_notify_data);
 	/* By this point mode should have been validated through mode_fixup */
 	rc = dsi_display_set_mode(c_bridge->display,
 			&(c_bridge->dsi_mode), 0x0);
@@ -267,7 +267,7 @@ static void dsi_bridge_pre_enable(struct drm_bridge *bridge)
 		return;
 	}
 
-	drm_notifier_call_chain(DRM_EARLY_EVENT_BLANK, &g_notify_data);
+	drm_notifier_call_chain(MI_DRM_EARLY_EVENT_BLANK, &g_notify_data);
 
 	if (c_bridge->dsi_mode.dsi_mode_flags &
 		(DSI_MODE_FLAG_SEAMLESS | DSI_MODE_FLAG_VRR |
@@ -295,7 +295,7 @@ static void dsi_bridge_pre_enable(struct drm_bridge *bridge)
 	}
 	SDE_ATRACE_END("dsi_display_enable");
 
-	drm_notifier_call_chain(DRM_EVENT_BLANK, &g_notify_data);
+	drm_notifier_call_chain(MI_DRM_EVENT_BLANK, &g_notify_data);
 
 	rc = dsi_display_splash_res_cleanup(c_bridge->display);
 	if (rc)
@@ -502,8 +502,8 @@ static void dsi_bridge_post_disable(struct drm_bridge *bridge)
 	struct drm_device *dev = bridge->dev;
 	int event = 0;
 
-	if (dev->doze_state == DRM_BLANK_UNBLANK) {
-		dev->doze_state = DRM_BLANK_POWERDOWN;
+	if (dev->doze_state == MI_DRM_BLANK_UNBLANK) {
+		dev->doze_state = MI_DRM_BLANK_POWERDOWN;
 		pr_info("%s wrong doze state\n", __func__);
 	}
 
@@ -521,15 +521,15 @@ static void dsi_bridge_post_disable(struct drm_bridge *bridge)
 		return;
 	}
 
-	if (dev->doze_state == DRM_BLANK_LP1 || dev->doze_state == DRM_BLANK_LP2) {
+	if (dev->doze_state == MI_DRM_BLANK_LP1 || dev->doze_state == MI_DRM_BLANK_LP2) {
 		pr_err("%s doze state can't power off panel\n", __func__);
-		event = DRM_BLANK_POWERDOWN;
-		drm_notifier_call_chain(DRM_EARLY_EVENT_BLANK, &g_notify_data);
-		drm_notifier_call_chain(DRM_EVENT_BLANK, &g_notify_data);
+		event = MI_DRM_BLANK_POWERDOWN;
+		drm_notifier_call_chain(MI_DRM_EARLY_EVENT_BLANK, &g_notify_data);
+		drm_notifier_call_chain(MI_DRM_EVENT_BLANK, &g_notify_data);
 		return;
 	}
 
-	drm_notifier_call_chain(DRM_EARLY_EVENT_BLANK, &g_notify_data);
+	drm_notifier_call_chain(MI_DRM_EARLY_EVENT_BLANK, &g_notify_data);
 
 	SDE_ATRACE_BEGIN("dsi_bridge_post_disable");
 	SDE_ATRACE_BEGIN("dsi_display_disable");

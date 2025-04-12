@@ -20,6 +20,7 @@
 #include "../../../../kernel/irq/internals.h"
 #include "dsi_display.h"
 #include "sde_dbg.h"
+#include "sde_connector.h"
 
 #include <linux/fs.h>
 #include <asm/uaccess.h>

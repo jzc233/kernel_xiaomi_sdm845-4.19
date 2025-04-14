@@ -1,4 +1,4 @@
-ifeq ($(CONFIG_MACH_XIAOMI_SDM845),y)
+ifeq ($(CONFIG_MACH_XIAOMI),y)
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
 	dtbo-y += \
 		sdm845-mtp-overlay.dtbo \

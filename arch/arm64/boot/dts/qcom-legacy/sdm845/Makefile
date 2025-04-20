@@ -1,4 +1,4 @@
-dtb-$(CONFIG_ARCH_SDM845) += sdm845-mtp.dtb
+dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
 
 dtb-$(CONFIG_MACH_XIAOMI_E10) := xiaomi/beryllium/beryllium-mp-v2.1.dtb
 dtb-$(CONFIG_MACH_XIAOMI_D5X) += xiaomi/polaris/polaris-p0.dtb \

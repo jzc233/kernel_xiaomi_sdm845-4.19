@@ -3,10 +3,12 @@ ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
 		sdm845-mtp-overlay.dtbo \
 		sdm845-v2-mtp-overlay.dtbo \
 		sdm845-v2.1-mtp-overlay.dtbo \
+		xiaomi/perseus/perseus-mp-v2.1-overlay.dtbo
 
 sdm845-mtp-overlay.dtbo-base := sdm845.dtb
 sdm845-v2-mtp-overlay.dtbo-base := sdm845-v2.dtb
 sdm845-v2.1-mtp-overlay.dtbo-base := sdm845-v2.1.dtb
+perseus-mp-v2.1-overlay.dtbo-base := sdm845-v2.1.dtb
 else
 dtb-$(CONFIG_ARCH_SDM845) += \
 	sdm845-mtp.dtb \

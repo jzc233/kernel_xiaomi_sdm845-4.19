@@ -1,4 +1,3 @@
-ifeq ($(CONFIG_MACH_XIAOMI),y)
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
 	dtbo-y += \
 		sdm845-mtp-overlay.dtbo \
@@ -61,7 +60,6 @@ dipper-p2-v2.1-overlay.dtbo-base := sdm845-v2.1.dtb
 beryllium-p0-v2-overlay.dtbo-base := sdm845-v2.dtb
 beryllium-p0-v2.1-overlay.dtbo-base := sdm845-v2.1.dtb
 
-endif
 endif
 
 always		:= $(dtb-y)
